@@ -159,7 +159,7 @@ public class GameService {
 		
 		// If the game is not over after player's move, then add a move by the service
 		// Add service's move and check if the game is a win (by service) or a draw
-		if (gameStatusAfterMove != GameStatus.DRAW || gameStatusAfterMove != GameStatus.PLAYERWON) {
+		if (gameStatusAfterMove != GameStatus.DRAW && gameStatusAfterMove != GameStatus.PLAYERWON) {
 			logger.debug("GameService:playOneTurn Proceeding with service move after recording player's move");
 			gameStatusAfterMove = registerServiceMove(newGameState);
 		}
