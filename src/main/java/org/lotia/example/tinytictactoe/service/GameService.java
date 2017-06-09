@@ -52,9 +52,8 @@ public class GameService {
 	
 	public Game registerMove(String gameId, Game game) 
 			throws GameNotFoundException,  IllegalMoveException, GameNotInProgressException { 
-		// TODO: Throw exception if game not found
-		// make sure the game is valid and the move is valid
 		
+		// make sure the game is valid and the move is valid
 		if (! gameRepository.gameExists(gameId)) {
 			throw new GameNotFoundException(gameId);
 		}
@@ -84,8 +83,12 @@ public class GameService {
 		}
 	}
 	
-	public void deleteGame(String gameId) {
-		// TODO: check for gameId and throw exception if Id is not found
+	public void deleteGame(String gameId) throws GameNotFoundException {
+		
+		// make sure the game is valid and the move is valid
+		if (! gameRepository.gameExists(gameId)) {
+			throw new GameNotFoundException(gameId);
+		}
 		gameRepository.deleteGameById(gameId);
 	}
 	
@@ -98,19 +101,12 @@ public class GameService {
 		
 		if (gameStatusAfterMove != GameStatus.DRAW || gameStatusAfterMove != GameStatus.PLAYERWON) {
 			
-			// Game is not over after player's move, so add a move by the service
-			
+			// If the game is not over after player's move, then add a move by the service
 			// Add service's move and check if the game is a win (by service) or a draw
 			gameStatusAfterMove = registerServiceMove(previousGameState, newGameState);
-//			if (gameStatusAfterMove != GameStatus.DRAW || gameStatusAfterMove != GameStatus.SERVICEWON) {
-//				// TODO: Handle win by service
-//				
-//			}
 		}
 		
-		// TODO: Save the state of the game and return the status
-		
-		return gameStatusAfterMove;  // FIXME:
+		return gameStatusAfterMove;
 	}
 
 
@@ -119,7 +115,8 @@ public class GameService {
 	
 		// Check if the square is not already occupied
 		if (! GameValidationUtils.isSquareAvailable(previousGameState, newGameState)) {
-			throw new IllegalMoveException(gameId); // TODO: Add move location
+			int[] location = newGameState.getLocation();
+			throw new IllegalMoveException("gameId=" + gameId + " row=" + location[0] + " column=" + location[1]);
 		}
 		
 		// record the move by player and check if it is a win or draw
@@ -129,8 +126,7 @@ public class GameService {
 		newGameState.setBoardMarker(newRow, newColumn, GameConstants.PLAYER_MARKER);
 		
 		GameStatus newGameStatus = GameValidationUtils.determineGameStatus(newGameState);
-		newGameState.setGameStatus(newGameStatus); // TODO: Check if this is needed!
-		// check if the game is already won or is a draw
+		newGameState.setGameStatus(newGameStatus);
 		
 		return newGameStatus;
 	}
@@ -142,7 +138,7 @@ public class GameService {
 	 */
 	private GameStatus registerServiceMove(Game previousGameState, Game newGameState) {
 		
-		// Make a dumb move by finding the next open square		
+		// Make a dumb move by finding the first open square		
 		int row = 0;
 		int column = 0;
 		int boardSize = previousGameState.getBoard().length;

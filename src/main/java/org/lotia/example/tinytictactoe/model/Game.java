@@ -3,6 +3,7 @@ package org.lotia.example.tinytictactoe.model;
 import java.util.Arrays;
 
 import org.lotia.example.tinytictactoe.GameConstants;
+import org.lotia.example.tinytictactoe.exceptions.IllegalMoveException;
 
 public class Game {
 
@@ -69,12 +70,10 @@ public class Game {
 	
 	public void setBoardMarker(int row, int column, Character marker) throws IndexOutOfBoundsException {
 		if (row < 0 || row >= board.length || column < 0 || column >= board.length) {
-			throw new IndexOutOfBoundsException("Invalid index given for board: row=" + row + " column=" + column);
+			throw new IllegalMoveException("Invalid index given for board: row=" + row + " column=" + column);
+		
 		}
-		// TODO: Create a different exception or update IllegalMoveExceptin to take a generic message
-//		if (marker != GameConstants.PLAYER_MARKER && marker != GameConstants.SERVICE_MARKER) {
-//			throw new IllegalMoveException(gameId)
-//		}
+
 		board[row][column] = marker;
 	}
 	

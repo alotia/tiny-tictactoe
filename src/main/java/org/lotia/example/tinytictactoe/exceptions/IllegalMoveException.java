@@ -10,7 +10,7 @@ public class IllegalMoveException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -3742524374937985262L;
 
-	public IllegalMoveException(String gameId) {  // TODO: Add move location
-		super(gameId + " not found");
+	public IllegalMoveException(String message) {
+		super(message);
 	}
 }
