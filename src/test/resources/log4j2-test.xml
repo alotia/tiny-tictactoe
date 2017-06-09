@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<Configuration status="WARN" dest="logs/tiny-tictactoe-test.log4jerr.log">
+    <Appenders>
+        <RollingFile name="diagnostic" fileName="logs/tiny-tictactoe-test.log"
+            filePattern="logs/tiny-tictactoe-test.%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSSZ} srv="tiny-tictactoe" [%t] %-5level %C.%M:%L [ RunId="%X{RunId}" ] [ WorkflowId="%X{WorkflowId}" ] [ ActivityId="%X{ActivityId}" ] [ RequestID="%X{RequestID}" ] %msg%n</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+
+            <Filters>
+                <ThresholdFilter level="trace" />
+            </Filters>
+        </RollingFile>
+
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSSZ} srv="tiny-tictactoe" [%t] %-5level %C.%M:%L [ RunId="%X{RunId}" ] [ WorkflowId="%X{WorkflowId}" ] [ ActivityId="%X{ActivityId}" ] [ RequestID="%X{RequestID}" ] %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.lotia.example.tinytictactoe" level="INFO" />
+        <Logger name="org.springframework" level="INFO" />
+
+        <Root level="INFO">
+            <AppenderRef ref="diagnostic" />
+            <!--
+            <AppenderRef ref="console" />
+            -->
+        </Root>
+    </Loggers>
+</Configuration>
