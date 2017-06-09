@@ -8,7 +8,7 @@ import org.lotia.example.tinytictactoe.model.GameStatus;
 public class GameValidationUtils {
 
 
-	public static void idInGameMatchesIdGameId(Game game, String gameId) throws GameIdConflictException {
+	public static void idInGameMatchesGameId(Game game, String gameId) throws GameIdConflictException {
 	
 		String id = game.getId();
 		if (id == null || ! id.equals(gameId)) {

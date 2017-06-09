@@ -16,13 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
 @RunWith(MockitoJUnitRunner.class)
-@AutoConfigureRestDocs(outputDir = "target/snippets")
 public class GameControllerTest {
 
 
@@ -59,13 +57,7 @@ public class GameControllerTest {
     		assertEquals(game2, actualGames.getBody().get(1));
     }
     
-    @Test
-    public void testCreateNewGame() throws Exception {
-    		
-    }
+    // TODO: Add more tests for other APIs
     
-    @Test
-    public void testDeleteAllGames() throws Exception {
-    		
-    }
+   
 }

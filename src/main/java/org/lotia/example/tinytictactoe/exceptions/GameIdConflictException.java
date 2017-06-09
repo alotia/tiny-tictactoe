@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Id in game does not match gameId in param")
-public class GameIdConflictException extends RuntimeException {
+public class GameIdConflictException extends Exception {
 
 	/**
 	 * Unique ID for Serialized object
@@ -14,5 +14,4 @@ public class GameIdConflictException extends RuntimeException {
 	public GameIdConflictException(String gameId, String id) {
 		super("gameId=" + gameId + " does not match id=" + id);
 	}
-
 }

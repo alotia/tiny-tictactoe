@@ -67,11 +67,12 @@ public class Game {
 		}
 		return board[row][column];
 	}
-	
+
+	// Since a game square cannot be cleared in a move, only allow move for player or service
 	public void setBoardMarker(int row, int column, Character marker) throws IndexOutOfBoundsException {
-		if (row < 0 || row >= board.length || column < 0 || column >= board.length) {
+		if (row < 0 || row >= board.length || column < 0 || column >= board.length ||
+				(marker != GameConstants.PLAYER_MARKER && marker != GameConstants.SERVICE_MARKER)) {
 			throw new IllegalMoveException("Invalid index given for board: row=" + row + " column=" + column);
-		
 		}
 
 		board[row][column] = marker;

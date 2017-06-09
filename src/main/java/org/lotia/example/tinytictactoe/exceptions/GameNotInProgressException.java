@@ -1,6 +1,6 @@
 package org.lotia.example.tinytictactoe.exceptions;
 
-public class GameNotInProgressException extends RuntimeException {
+public class GameNotInProgressException extends Exception {
 
 	/**
 	 * Unique ID for Serialized object
@@ -8,6 +8,6 @@ public class GameNotInProgressException extends RuntimeException {
 	private static final long serialVersionUID = -432143606324108820L;
 
 	public GameNotInProgressException(String gameId) {
-		super(gameId + " not found");
+		super("gameId=" + gameId + " not in progress");
 	}
 }
