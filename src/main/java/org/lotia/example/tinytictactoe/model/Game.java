@@ -4,9 +4,12 @@ import java.util.Arrays;
 
 import org.lotia.example.tinytictactoe.GameConstants;
 import org.lotia.example.tinytictactoe.exceptions.IllegalMoveException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Game {
-
+	private final Logger logger = LoggerFactory.getLogger(Game.class);
+	
 	private String id;	
 	private int location[] = new int[2];
 	private Character[][] board;
@@ -62,6 +65,8 @@ public class Game {
 	}
 
 	public Character getBoardMarker(int row, int column) throws IndexOutOfBoundsException {
+		
+		logger.debug("Game:getBoardMarker row={}, column={}", row, column);
 		if (row < 0 || row >= board.length || column < 0 || column >= board.length) {
 			throw new IndexOutOfBoundsException("Invalid index given for board: row=" + row + " column=" + column);
 		}
@@ -70,6 +75,8 @@ public class Game {
 
 	// Since a game square cannot be cleared in a move, only allow move for player or service
 	public void setBoardMarker(int row, int column, Character marker) throws IndexOutOfBoundsException {
+		
+		logger.debug("Game:setBoardMarker row={}, column={}, marker={}", row, column, marker);
 		if (row < 0 || row >= board.length || column < 0 || column >= board.length ||
 				(marker != GameConstants.PLAYER_MARKER && marker != GameConstants.SERVICE_MARKER)) {
 			throw new IllegalMoveException("Invalid index given for board: row=" + row + " column=" + column);

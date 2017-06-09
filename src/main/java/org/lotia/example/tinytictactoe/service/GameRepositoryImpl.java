@@ -39,6 +39,4 @@ public class GameRepositoryImpl implements GameRepository {
 	public void deleteGameById(String gameId) {
 		games.remove(gameId);
 	}
-
-	
 }

@@ -67,6 +67,14 @@ Here's a sample game that does not have any recorded moves:
 
 `gameStatus`: This can be one of the following four values: 'INPROGRESS', 'PLAYERWON', 'SERVICEWON' or 'DRAW'.
 
+### Assumptions and TODOs
+
+Since this is not a "multiplayer" game where users are competing againsts one another, authentication was not required. The service does not care who sends it a request, it merely handles as a request for a starting  a new game, deleting and existing game, or playing a move in a game.
+
+I decided to implement a player making a move as a 'POST' rather than a 'PUT', since a move is not idempotent. Once a square has been marked, you cannot mark it again, and also that once a player has played a turn, the service also plays a turn, so the board is not the same between subsequent requests.
+
+*More unit tests are needed.*
+
 
 
 
