@@ -1,6 +1,9 @@
 package org.lotia.example.tinytictactoe.config;
 
 import org.lotia.example.tinytictactoe.resources.GameController;
+import org.lotia.example.tinytictactoe.resources.HealthCheck;
+import org.lotia.example.tinytictactoe.resources.Ping;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,19 +18,24 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @PropertySource("classpath:swagger.properties")
-@ComponentScan(basePackageClasses = GameController.class)
+@ComponentScan(basePackageClasses = {
+		GameController.class, Ping.class, HealthCheck.class
+		})
 @Configuration
 public class SwaggerConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
     private static final String LICENSE_TEXT = "MIT License";
-    private static final String title = "TinyTicTacToe REST API";
-    private static final String description = "RESTful API for TinyTicTacToe Service";
+    private static final String TITLE = "TinyTicTacToe REST API";
+    private static final String DESCRIPTION = "RESTful API for TinyTicTacToe Service";
 
+    @Value("${server.context-path}")
+    private String serverContextPath;
+    
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(title)
-                .description(description)
+                .title(TITLE)
+                .description(DESCRIPTION)
                 .license(LICENSE_TEXT)
                 .version(SWAGGER_API_VERSION)
                 .build();
@@ -35,11 +43,14 @@ public class SwaggerConfig {
 
     @Bean
     public Docket productsApi() {
+    		if (serverContextPath == null || serverContextPath.equals("")) {
+    			serverContextPath = "/";
+    		}
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .pathMapping("/")
+                .pathMapping(serverContextPath)
                 .select()
-                .paths(PathSelectors.regex("/games.*"))
+                .paths(PathSelectors.regex("/(games|ping|healthCheck).*"))
                 .build();
     }
 }

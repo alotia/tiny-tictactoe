@@ -5,6 +5,7 @@ import java.util.List;
 import org.lotia.example.tinytictactoe.GameConstants;
 import org.lotia.example.tinytictactoe.exceptions.GameIdConflictException;
 import org.lotia.example.tinytictactoe.exceptions.GameNotFoundException;
+import org.lotia.example.tinytictactoe.exceptions.IllegalMoveException;
 import org.lotia.example.tinytictactoe.model.Game;
 import org.lotia.example.tinytictactoe.service.GameService;
 import org.lotia.example.tinytictactoe.service.util.GameValidationUtils;
@@ -28,7 +29,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/games")
-@Api(value = "GamesControllerAPI", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "GamesController API", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GameController {
 	
 	private final Logger logger = LoggerFactory.getLogger(GameController.class);
@@ -39,7 +40,7 @@ public class GameController {
 	
 	// GET all the games
 	@RequestMapping(method = RequestMethod.GET)
-	@ApiOperation("Returns all the games created")
+	@ApiOperation("Return all the games created")
 	@ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Game.class)})
 	public ResponseEntity<List<Game>> getAllGames() {
 		
@@ -50,8 +51,11 @@ public class GameController {
 	
 	// CREATE a new game
 	@RequestMapping(method = RequestMethod.POST)
-	@ApiOperation("Create a new game")
-	@ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Game.class)})
+	@ApiOperation(value = "Create a new game")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response = Game.class),
+			@ApiResponse(code = 400, message = "Bad Request")
+	})
 	public ResponseEntity<Game> createNewGame(
 		@RequestParam(value="playFirst", defaultValue="false") String playFirst,
 		@RequestParam(value="boardSize", defaultValue="3") String boardSize) {
@@ -74,6 +78,8 @@ public class GameController {
 	
 	// DELETE all the games
 	@RequestMapping(method = RequestMethod.DELETE)
+	@ApiOperation("Delete all games")
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Object.class)})
 	public ResponseEntity<?> deleteAllGames() {
 		logger.debug("GameController:deleteAllGames");
 		
@@ -82,8 +88,15 @@ public class GameController {
 	}
 	
 	
-	// Get the state of a current game
+	// GET the state of a current game
 	@RequestMapping(value="/{gameId}", method = RequestMethod.GET)
+	@ApiOperation(
+			value = "Get the state of a game.",
+			notes ="Returns the entire game board with in it's current state.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK", response = Game.class),
+		@ApiResponse(code = 404, message = "Not Found")
+	})
 	public ResponseEntity<Game> getGame(
 			@PathVariable("gameId") String gameId) {
 		logger.debug("GameController:getGame gameId={}", gameId);
@@ -93,7 +106,7 @@ public class GameController {
 			game = gameService.getGame(gameId);
 		} catch (GameNotFoundException e) {
 			logger.warn("Couldn't find gameId=" + gameId);
-			return new ResponseEntity<Game>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
@@ -101,7 +114,12 @@ public class GameController {
 	
 	// DELETE a specific game
 	@RequestMapping(value="/{gameId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Game> deleteGame(
+	@ApiOperation("Delete a game.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK"),
+		@ApiResponse(code = 404, message = "Not Found")
+	})
+	public ResponseEntity<?> deleteGame(
 			@PathVariable("gameId") String gameId) {
 		logger.debug("GameController:deleteGame gameId={}", gameId);
 		
@@ -109,27 +127,46 @@ public class GameController {
 			gameService.getGame(gameId);
 		} catch (GameNotFoundException e) {
 			logger.warn("Couldn't find gameId=" + gameId);
-			return new ResponseEntity<Game>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}		
 		
 		gameService.deleteGame(gameId);
-		return new ResponseEntity<Game>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 
 	// ADD a move by user
 	@RequestMapping(value="/{gameId}", method = RequestMethod.POST)
+	@ApiOperation(
+			value = "Play a move specified by user (and service)",
+			notes = "Records a move specified by a user. <br/>"
+				  + "If after the user's move the game is won by user or is a draw (i.e. "
+				  + "the board is not full) the service will register its move.<br/>"
+				  + "The state of the board will be checked after the move to see if the service has won, or if it draw.")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK", response = Game.class),
+		@ApiResponse(code = 404, message = "Not Found"),
+		@ApiResponse(code = 400, message = "Conflict")
+	})
 	public ResponseEntity<Game> playMove(
 			@PathVariable("gameId") String gameId,
 			@RequestBody Game game) {
 		logger.debug("GameController:playMove gameId={}, game={}", gameId, game);
 		
 		try {
+			gameService.getGame(gameId);
 			GameValidationUtils.idInGameMatchesIdGameId(game, gameId);
+		} catch (GameNotFoundException e) {
+			logger.warn("Couldn't find gameId=" + gameId);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (GameIdConflictException e) {
 			logger.warn("id=" + game.getId() + " in game doesn't match gameId=" + gameId);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} catch (IllegalMoveException e) {
+			int[] location = game.getLocation();
+			logger.warn("Illegal move specified in request. row=" + location[0] + " column=" + location[1]);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		
 		Game newGame = gameService.registerMove(gameId, game);
 		return new ResponseEntity<Game>(newGame, HttpStatus.OK);
 	}
