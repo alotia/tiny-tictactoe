@@ -33,13 +33,12 @@ public class GameValidationUtilsTest {
 	@Test
 	public void testIsSquareAvailable_available() throws Exception {
 		final String gameId = "foo";
-		final Game existingGameBoard = new Game(gameId);
 		final Game newGameBoard = new Game(gameId);
 		int newLocation[] = {1, 1};
 		newGameBoard.setLocation(newLocation);
 		
 		// existingGameBoard has no markers, so newLocation should be available
-		assertTrue(GameValidationUtils.isSquareAvailable(existingGameBoard, newGameBoard));
+		assertTrue(GameValidationUtils.isSquareAvailable(newGameBoard));
 	}
 	
 	@Test
@@ -47,13 +46,12 @@ public class GameValidationUtilsTest {
 		final String gameId = "foo";
 		int row = 1;
 		int column = 1;
-		final Game existingGameBoard = new Game(gameId);
 		final Game newGameBoard = new Game(gameId);
 		int newLocation[] = {row, column};
 		// mark the existing location with a marker
-		existingGameBoard.setBoardMarker(row, column, GameConstants.PLAYER_MARKER);
+		newGameBoard.setBoardMarker(row, column, GameConstants.PLAYER_MARKER);
 		newGameBoard.setLocation(newLocation);
-		assertFalse(GameValidationUtils.isSquareAvailable(existingGameBoard, newGameBoard));
+		assertFalse(GameValidationUtils.isSquareAvailable(newGameBoard));
 	}
 	
 	

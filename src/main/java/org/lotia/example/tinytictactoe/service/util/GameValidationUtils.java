@@ -22,12 +22,12 @@ public class GameValidationUtils {
 		} 
 	}
 	
-	public static boolean isSquareAvailable(final Game previousGameState, final Game newGameState) {
+	public static boolean isSquareAvailable(final Game newGameState) {
 		int[] newMoveLocation = newGameState.getLocation();
 		final int newRow = newMoveLocation[0];
 		final int newColumn = newMoveLocation[1];
 		
-		Character[][] board = previousGameState.getBoard();
+		Character[][] board = newGameState.getBoard();
 		if (board[newRow][newColumn] == GameConstants.EMPTY_SPACE_MARKER) {
 			return true;
 		}

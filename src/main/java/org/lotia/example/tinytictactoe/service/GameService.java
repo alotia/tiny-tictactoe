@@ -109,7 +109,7 @@ public class GameService {
 		
 		// registerMove will throw an Illegal move exception for invalid moves
 		// Otherwise it will add the move and return the status of the game
-		GameStatus gameStatus = playOneTurn(gameId, existingGame, game);
+		GameStatus gameStatus = playOneTurn(gameId, game);
 		game.setGameStatus(gameStatus);
 		
 		// Save the updated game and return it
@@ -150,18 +150,18 @@ public class GameService {
 	 * If the service makes a move, the board is again checked to see if the service has won, or the game
 	 * is a draw.
 	 */
-	private GameStatus playOneTurn(final String gameId, Game previousGameState, Game newGameState) 
+	private GameStatus playOneTurn(final String gameId, Game newGameState) 
 			throws IllegalMoveException {
 		
 		// Add the player's (service user) move and check if the game is a win player or a draw
 		GameStatus gameStatusAfterMove;
-		gameStatusAfterMove = registerPlayerMove(gameId, previousGameState, newGameState);
+		gameStatusAfterMove = registerPlayerMove(gameId, newGameState);
 		
 		// If the game is not over after player's move, then add a move by the service
 		// Add service's move and check if the game is a win (by service) or a draw
 		if (gameStatusAfterMove != GameStatus.DRAW || gameStatusAfterMove != GameStatus.PLAYERWON) {
 			logger.debug("GameService:playOneTurn Proceeding with service move after recording player's move");
-			gameStatusAfterMove = registerServiceMove(previousGameState, newGameState);
+			gameStatusAfterMove = registerServiceMove(newGameState);
 		}
 		
 		return gameStatusAfterMove;
@@ -171,11 +171,11 @@ public class GameService {
 	/*
 	 * This makes the player's move after validating it, and set the status of the game accordingly.
 	 */
-	private GameStatus registerPlayerMove(final String gameId, Game previousGameState, Game newGameState) 
+	private GameStatus registerPlayerMove(final String gameId, Game newGameState) 
 			throws IllegalMoveException {
 	
 		// Check if the square is not already occupied
-		if (! GameValidationUtils.isSquareAvailable(previousGameState, newGameState)) {
+		if (! GameValidationUtils.isSquareAvailable(newGameState)) {
 			int[] location = newGameState.getLocation();
 			throw new IllegalMoveException("gameId=" + gameId + " row=" + location[0] + " column=" + location[1]);
 		}
@@ -198,16 +198,16 @@ public class GameService {
 	 * between a dumb or smart move. In this case, the service simply plays the first available square
 	 * that it sees scanning from left to right, top to bottom.
 	 */
-	private GameStatus registerServiceMove(Game previousGameState, Game newGameState) {
+	private GameStatus registerServiceMove(Game newGameState) {
 		
 		// Make a dumb move by finding the first open square		
 		int row = 0;
 		int column = 0;
-		int boardSize = previousGameState.getBoard().length;
+		int boardSize = newGameState.getBoard().length;
 		boolean emptySquareFound = false;
 		for (row=0; row < boardSize; row++) {
 			for (column=0; column < boardSize; column++) {
-				if (previousGameState.getBoardMarker(row, column) == GameConstants.EMPTY_SPACE_MARKER) {
+				if (newGameState.getBoardMarker(row, column) == GameConstants.EMPTY_SPACE_MARKER) {
 					emptySquareFound = true;
 					break;
 				}
