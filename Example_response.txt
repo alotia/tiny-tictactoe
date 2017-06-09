@@ -1,0 +1,46 @@
+Here are some sample responses sent by the service when the use makes a move. The requests look exactly the same
+as the response, the only
+
+Start (game 1) -- In this case the Player wins
+{"id":"1","location":[0,0],"board":[[" "," "," "],[" "," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays at [0,0]
+{"id":"1","location":[0,0],"board":[["X","O"," "],[" "," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays at [1,0]
+{"id":"1","location":[2,0],"board":[["X","O","O"],["X"," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays at [2,0]
+{"id":"1","location":[2,0],"board":[["X","O","O"],["X","O"," "],["X"," "," "]],"gameStatus":"PLAYERWON"}
+
+
+Start (game 2) -- The player moves are such that the service wins
+{"id":"2","location":[0,0],"board":[[" "," "," "],[" "," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays at [2,2]
+{"id":"2","location":[2,2],"board":[["O"," "," "],[" "," "," "],[" "," ","X"]],"gameStatus":"INPROGRESS"}
+
+Player plays at [2,1]
+{"id":"2","location":[2,1],"board":[["O","O"," "],[" "," "," "],[" ","X","X"]],"gameStatus":"INPROGRESS"}
+
+Player plays at [1,2]
+{"id":"2","location":[1,2],"board":[["O","O","O"],[" "," ","X"],[" ","X","X"]],"gameStatus":"SERVICEWON"}
+
+
+Start (game 3) -- Game ends in a draw
+{"id":"3","location":[0,0],"board":[[" "," "," "],[" "," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays [0,1]
+{"id":"3","location":[0,1],"board":[["O","X"," "],[" "," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays [1,0]
+{"id":"3","location":[1,0],"board":[["O","X","O"],["X"," "," "],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays [1,2]
+{"id":"3","location":[1,2],"board":[["O","X","O"],["X","O","X"],[" "," "," "]],"gameStatus":"INPROGRESS"}
+
+Player plays [2,0]
+{"id":"3","location":[2,0],"board":[["O","X","O"],["X","O","X"],["X","O"," "]],"gameStatus":"INPROGRESS"}
+
+Player plays [2,2]
+{"id":"1","location":[2,2],"board":[["O","X","O"],["X","O","X"],["X","O","X"]],"gameStatus":"DRAW"}
