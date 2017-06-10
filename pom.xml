@@ -52,8 +52,8 @@
 		
 		<dependency>
     			<groupId>io.springfox</groupId>
-    			<artifactId>springfox-swagger2</artifactId>
-    			<version>${springfox-swagger2.version}</version>
+    			<artifactId>springfox-swagger-ui</artifactId>
+    			<version>${springfox-swagger-ui.version}</version>
 		</dependency>
 		
 	</dependencies>
