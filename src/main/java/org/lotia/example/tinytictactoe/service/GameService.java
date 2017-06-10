@@ -160,7 +160,7 @@ public class GameService {
 		// If the game is not over after player's move, then add a move by the service
 		// Add service's move and check if the game is a win (by service) or a draw
 		if (gameStatusAfterMove != GameStatus.DRAW && gameStatusAfterMove != GameStatus.PLAYERWON) {
-			logger.debug("GameService:playOneTurn Proceeding with service move after recording player's move");
+			logger.debug("GameService:playOneTurn Continuing with service move after recording player's move");
 			gameStatusAfterMove = registerServiceMove(newGameState);
 		}
 		
@@ -217,7 +217,11 @@ public class GameService {
 			}
 		}
 		
-		newGameState.setBoardMarker(row, column, GameConstants.SERVICE_MARKER);		
+		// Set the marker and the location of the move
+		int[] newMoveLocation = {row, column};
+		newGameState.setBoardMarker(row, column, GameConstants.SERVICE_MARKER);
+		newGameState.setLocation(newMoveLocation);
+		
 		GameStatus newGameStatus = GameValidationUtils.determineGameStatus(newGameState);
 		
 		return newGameStatus;
