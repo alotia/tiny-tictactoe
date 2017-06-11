@@ -21,6 +21,7 @@ The service handles exceptions by returning the appropriate HttpStatus code. For
 * [Jersey](https://jersey.java.net/)
 * [Log4j2](http://logging.apache.org/log4j/2.x/)
 * [SpringFox](https://springfox.github.io/springfox/) (for Swagger integration)
+* [Docker](https://www.docker.com/)
 
 ##  Running the service locally
 
@@ -33,7 +34,17 @@ Thanks to Spring Boot, running the application is easy. Simply issue the followi
 
 `mvn spring-boot:run`
 
-Maven will fetch all the necessary dependencies and will compile and run the unit tests and start the application. By default, the application runs on port 8087 and with a server context set to ’/tinytictactoe’. These properties are specified in `src/main/resources/application.properties` file.
+Maven will fetch all the necessary dependencies and will compile and run the unit tests and start the application. By default, the application runs on port *8087* and with a server context set to */tinytictactoe*. These properties are specified in `src/main/resources/application.properties` file.
+
+#### Running a sample scenario
+
+A collection of `curl` commands have been packaged into a shell script: `tiny-ttt_curl_calls.sh`
+
+Once the service is started, open a new terminal and run this script to create some games and have it issue some sample commands against the service.
+
+#### Running a docker image
+
+A docker image `alotia/tiny-tictactoe`  of the Spring Boot application has been created and can be fetched from Docker Cloud. (ps. I just learned about Docker as part of doing this exercise, so there may be some glitches here!)
 
 ### View the API document
 
