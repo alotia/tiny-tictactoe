@@ -6,6 +6,7 @@
 .factorypath
 .idea
 .mvn
+settings.xml
 target
 logs
 test-output
