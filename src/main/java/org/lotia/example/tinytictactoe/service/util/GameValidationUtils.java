@@ -23,6 +23,7 @@ public class GameValidationUtils {
 	}
 	
 	public static boolean isSquareAvailable(final Game newGameState) {
+		
 		int[] newMoveLocation = newGameState.getLocation();
 		final int newRow = newMoveLocation[0];
 		final int newColumn = newMoveLocation[1];

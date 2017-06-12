@@ -7,6 +7,10 @@ import org.lotia.example.tinytictactoe.exceptions.IllegalMoveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/*
+ * The main game object. This class is used to map the game schema that is received
+ *  (and sent) to the client
+ */
 public class Game {
 	private final Logger logger = LoggerFactory.getLogger(Game.class);
 	
@@ -74,7 +78,7 @@ public class Game {
 	}
 
 	// Since a game square cannot be cleared in a move, only allow move for player or service
-	public void setBoardMarker(int row, int column, Character marker) throws IndexOutOfBoundsException {
+	public void setBoardMarker(int row, int column, Character marker) throws IllegalMoveException {
 		
 		logger.debug("Game:setBoardMarker row={}, column={}, marker={}", row, column, marker);
 		if (row < 0 || row >= board.length || column < 0 || column >= board.length ||

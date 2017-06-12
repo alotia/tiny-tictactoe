@@ -198,7 +198,7 @@ public class GameService {
 	 * between a dumb or smart move. In this case, the service simply plays the first available square
 	 * that it sees scanning from left to right, top to bottom.
 	 */
-	private GameStatus registerServiceMove(Game newGameState) {
+	private GameStatus registerServiceMove(Game newGameState) throws IllegalMoveException {
 		
 		// Make a dumb move by finding the first open square		
 		int row = 0;

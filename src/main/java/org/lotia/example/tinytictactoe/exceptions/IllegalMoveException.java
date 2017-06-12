@@ -1,6 +1,6 @@
 package org.lotia.example.tinytictactoe.exceptions;
 
-public class IllegalMoveException extends RuntimeException {
+public class IllegalMoveException extends GameException {
 
 	// Move to a square that is already covered
 	// Move out of bounds

@@ -3,10 +3,12 @@ package org.lotia.example.tinytictactoe.resources;
 import java.util.List;
 
 import org.lotia.example.tinytictactoe.GameConstants;
+import org.lotia.example.tinytictactoe.exceptions.GameException;
 import org.lotia.example.tinytictactoe.exceptions.GameIdConflictException;
 import org.lotia.example.tinytictactoe.exceptions.GameNotFoundException;
 import org.lotia.example.tinytictactoe.exceptions.GameNotInProgressException;
 import org.lotia.example.tinytictactoe.exceptions.IllegalMoveException;
+import org.lotia.example.tinytictactoe.model.ErrorResponse;
 import org.lotia.example.tinytictactoe.model.Game;
 import org.lotia.example.tinytictactoe.model.GameStatus;
 import org.lotia.example.tinytictactoe.service.GameService;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,10 +70,9 @@ public class GameController {
 		int size = GameConstants.DEFAULT_BOARD_SIZE;
 		try {
 			size = Integer.parseInt(boardSize);
-			
 		} catch (NumberFormatException e) {
 			logger.warn("Invalid boardSize given boardSize=" + boardSize);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			throw new GameException("Invalid boardSize specified boardSize=" + boardSize, HttpStatus.BAD_REQUEST);
 		}
 		
 		Game game = gameService.createGame(size);
@@ -108,7 +110,7 @@ public class GameController {
 			game = gameService.getGame(gameId);
 		} catch (GameNotFoundException e) {
 			logger.warn("Couldn't find gameId=" + gameId);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new GameException(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
@@ -139,17 +141,17 @@ public class GameController {
 			return new ResponseEntity<Game>(newGame, HttpStatus.OK);
 		} catch (GameNotFoundException e) {
 			logger.warn("Couldn't find gameId=" + gameId);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new GameException(e.getMessage(), HttpStatus.NOT_FOUND);
 		} catch (GameIdConflictException e) {
 			logger.warn("id=" + game.getId() + " in game doesn't match gameId=" + gameId);
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			throw new GameException(e.getMessage(), HttpStatus.CONFLICT);
 		} catch (IllegalMoveException e) {
 			int[] location = game.getLocation();
 			logger.warn("Illegal move specified in request. row=" + location[0] + " column=" + location[1]);
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			throw new GameException(e.getMessage(), HttpStatus.CONFLICT);
 		} catch (GameNotInProgressException e) {
 			logger.warn("Game gameId=" + gameId + " does not have " + GameStatus.INPROGRESS + " status");
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			throw new GameException(e.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 
@@ -171,7 +173,15 @@ public class GameController {
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (GameNotFoundException e) {
 			logger.warn("Couldn't find gameId=" + gameId);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new GameException(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> exceptionHandler(GameException e) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setErrorCode(e.getHttpStatus().value());
+		errorResponse.setMessage(e.getErrorMessage());
+		return new ResponseEntity<ErrorResponse>(errorResponse, e.getHttpStatus());
 	}
 }
