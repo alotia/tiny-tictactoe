@@ -1,5 +1,7 @@
 package org.lotia.example.tinytictactoe.service.util;
 
+import static org.mockito.Matchers.booleanThat;
+
 import org.lotia.example.tinytictactoe.GameConstants;
 import org.lotia.example.tinytictactoe.exceptions.GameIdConflictException;
 import org.lotia.example.tinytictactoe.model.Game;
@@ -55,7 +57,7 @@ public class GameValidationUtils {
 		
 		if (getBoardDiagonal(board).equals(playerWinPattern) || getBoardAntiDiagonal(board).equals(playerWinPattern)) {
 			return GameStatus.PLAYERWON;
-		} else if (getBoardDiagonal(board).equals(playerWinPattern) || getBoardAntiDiagonal(board).equals(playerWinPattern)) {
+		} else if (getBoardDiagonal(board).equals(serviceWinPattern) || getBoardAntiDiagonal(board).equals(serviceWinPattern)) {
 			return GameStatus.SERVICEWON;
 		}
 		
@@ -96,8 +98,8 @@ public class GameValidationUtils {
 	private static String getBoardAntiDiagonal(final Character[][] board) {
 		
 		StringBuffer sb = new StringBuffer();
-		for (int i=board.length -1; i >= 0; i--) {
-			sb.append(board[i][i]);
+		for (int i=0; i < board.length; i++) {
+			sb.append(board[i][board.length - i - 1]);
 		}
 		return sb.toString();
 	}
