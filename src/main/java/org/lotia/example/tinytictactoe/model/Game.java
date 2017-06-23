@@ -15,7 +15,7 @@ public class Game {
 	private final Logger logger = LoggerFactory.getLogger(Game.class);
 	
 	private String id;	
-	private int location[] = new int[2];
+	private int[] location = new int[2];
 	private Character[][] board;
 	private GameStatus gameStatus;
 	

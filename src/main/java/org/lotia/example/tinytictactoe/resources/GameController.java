@@ -135,8 +135,8 @@ public class GameController {
 		logger.debug("GameController:playMove gameId={}, game={}", gameId, game);
 		
 		try {
-			gameService.getGame(gameId);
 			GameValidationUtils.idInGameMatchesGameId(game, gameId);
+			gameService.getGame(gameId);
 			Game newGame = gameService.registerMove(gameId, game);
 			return new ResponseEntity<Game>(newGame, HttpStatus.OK);
 		} catch (GameNotFoundException e) {
