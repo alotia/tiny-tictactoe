@@ -1,20 +1,14 @@
 package org.lotia.example.tinytictactoe.service.util;
 
-import static org.mockito.Matchers.booleanThat;
-
 import org.lotia.example.tinytictactoe.GameConstants;
 import org.lotia.example.tinytictactoe.exceptions.GameIdConflictException;
 import org.lotia.example.tinytictactoe.model.Game;
 import org.lotia.example.tinytictactoe.model.GameStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*
  * Utility methods to check if the game board is in a "consistent" state and also 
  */
 public class GameValidationUtils {
-
-	private final Logger logger = LoggerFactory.getLogger(GameValidationUtils.class);
 	
 	public static void idInGameMatchesGameId(final Game game, final String gameId) throws GameIdConflictException {
 	

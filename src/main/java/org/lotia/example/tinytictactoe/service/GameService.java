@@ -22,14 +22,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GameService {
-
 	private final Logger logger = LoggerFactory.getLogger(GameService.class);
-	
 	private static AtomicLong gameIdCounter = new AtomicLong();
 	
-	@Autowired
 	private GameRepository gameRepository;
 	
+	@Autowired
+	public GameService(GameRepository gameRepository) {
+		this.gameRepository = gameRepository;
+	}
 	
 	/**
 	 * Create a new game board. The id is a static counter and incremented for every request.
